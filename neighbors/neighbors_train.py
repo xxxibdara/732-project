@@ -38,53 +38,53 @@ def main(inputs, duration, model_file):
     location = location.withColumn('i', functions.lit('1'))
     pandasDF = location.toPandas()
     pandasDF['i'] = pandasDF.reset_index().index
-    print(pandasDF)
+    print('Pandas DataFrame: \n', pandasDF)
 
     x = pandasDF[['id','name', 'latitude', 'longitude', 'i']]
     train, test = train_test_split(x, test_size=.25, random_state=0) #25% is the test data
 
     train_data = train.values[:, 2:4]
     test_data = test.values[:, 2:4]
+    print('Train data looks like: \n', train_data)
+    
 
     clt = NearestNeighbors(metric=distance, algorithm='ball_tree')
     clt.fit(train_data)
 
 
     #find the neighbors with 500 meters
-    distances, points = clt.radius_neighbors(train_data, duration, return_distance=True)
+    distances, indices = clt.radius_neighbors(train_data, duration, return_distance=True)
     train['distances'] = distances.tolist()
-    train['points'] = points.tolist()
+    train['indices'] = indices.tolist()
 
-    #test contains 7 column: id, name, longitude, latitude, distances, points, row number  
+    #test contains 7 column: id, name, longitude, latitude, distances, indices, row number  
     
     #filter out the points that it is the test data itself and some unrealiable 
-    res = []
-    for name, la1, lo1, i, dis, points in train.values[:, 1:7]:
+    results = []
+    
+    for name, la1, lo1, i, dis, indices in train.values[:, 1:7]:
         #points and dis are Numpy arrays
-        points = np.array(points).tolist()
+        indices = np.array(indices).tolist()
         dis = np.array(dis).tolist()
-        for ps in points:
-            try:
-                index = points.index(ps)
-            except ValueError:
-                index = -1
-            if index >= 0:
-                points.pop(index)
-                dis.pop(index)
+        for ic in indices:
+            idx = indices.index(ic) 
+            if idx >= 0:
+                indices.pop(idx)
+                dis.pop(idx)
 
-            zipped = zip(points,distances)
+            zipped = zip(indices, distances)
             for p, d in zipped:
                 p = int(p)
 
                 id, name2, la2, lo2 = x.loc[p].values[0:4]
-                res.append((name, la1, lo1, id, name2, la2, lo2, d))
-    res = pd.DataFrame(res, columns=['STORE','LATITUDE', 'LONGITUDE', 'NEIGHBOR ID', 'NEIGHBOR STORE', 'NEIGHBOR LATITUDE', 'NEIGHBOR LONGITUDE', 'DISTANCE'])
-    res = res.drop_duplicates(['NEIGHBOR LATITUDE'])
+                results.append((name, la1, lo1, id, name2, la2, lo2, d))
+    results = pd.DataFrame(results, columns=['STORE','LATITUDE', 'LONGITUDE', 'NEIGHBOR ID', 'NEIGHBOR STORE', 'NEIGHBOR LATITUDE', 'NEIGHBOR LONGITUDE', 'DISTANCE'])
+    results = results.drop_duplicates(['NEIGHBOR LATITUDE'])
     #I want to know which store has the most neighbors
-    res['COUNTS'] = res.groupby('STORE')['NEIGHBOR STORE'].transform(len)
+    results['COUNTS'] = results.groupby('STORE')['NEIGHBOR STORE'].transform(len)
     store_info_pd = store_info.toPandas()
 
-    neighbors = res.merge(store_info_pd, left_on='NEIGHBOR ID', right_on='id', how='inner')
+    neighbors = results.merge(store_info_pd, left_on='NEIGHBOR ID', right_on='id', how='inner')
     compression_opts = dict(method='zip',
                         archive_name='out.csv')  
     neighbors.to_csv('out.zip', index=False,
@@ -107,4 +107,6 @@ if __name__ == "__main__":
     duration = sys.argv[2]
     model = sys.argv[3]
     main(input, duration, model)
+
+
 
