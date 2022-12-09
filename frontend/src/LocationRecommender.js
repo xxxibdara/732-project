@@ -99,6 +99,8 @@ export default function LocationRecommender() {
                   <b>Neighbor Name: {business.neighbor_store}</b> <br/>
                   <b>Neighbor Longitude: {business.neighbor_longitude}</b> <br/>
                   <b>Neighbor Latitude: {business.neighbor_latitude}</b> <br/>
+                  <b>Neighbor Address: {business.neighbor_address}</b> <br/>
+                  <b>Neighbor Star Rating: {business.neighbor_stars}</b> <br/>
                   <b>Distance To Target Store: {business.distance}</b>
                 </Popup>
               </Marker>

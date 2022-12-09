@@ -178,6 +178,8 @@ def location():
             out_dic['neighbor_store'] = data['NEIGHBOR STORE']
             out_dic['neighbor_longitude'] = data['NEIGHBOR LONGITUDE']
             out_dic['neighbor_latitude'] = data['NEIGHBOR LATITUDE']
+            out_dic['neighbor_address'] = data['address']
+            out_dic['neighbor_stars'] = data['stars']
             out_list.append(out_dic)
             out_dic = {}
         data = json.dumps(out_list)
