@@ -1,0 +1,113 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+
+<h3  style="text-align: center">Locations</h3>
+<style> #lmap { height: 400px}</style>
+<div id="lmap"></div>
+<script>
+    //make map and tiles
+    
+    const lmap = L.map('lmap').setView([53.55, -113.49],12);
+    const attribution = '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>';
+    const tileUrl = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
+    const tile = L.tileLayer(tileUrl, {attribution});
+    tile.addTo(lmap);
+
+
+    const jsonfile = JSON.parse({{data|tojson}});
+    //const markers = L.markerClusterGroup();
+    const layerGroup1 = L.layerGroup().addTo(lmap);
+    const layerGroup2 = L.layerGroup().addTo(lmap);
+
+
+
+     for (i = 0; i < jsonfile.length; i++) {
+          var content =  "Name: " + jsonfile[i]['name'];
+          lat= jsonfile[i]['latitude'];
+          long=jsonfile[i]['longitude'];
+          marker = L.marker([lat,long]).bindPopup(content);  
+                 
+          marker.on('mouseover', function (e) {
+                    this.openPopup();
+                });
+                marker.on('mouseout', function (e) {
+                    this.closePopup();
+                });
+          marker.addTo(layerGroup1);
+          circle = L.circle([lat,long],{color:'steelblue',radius:500,fillColor:'steelblue',opacity:0.3}) 
+          circle.addTo(layerGroup2);
+     }
+     
+     lmap.addLayer(layerGroup1);
+     lmap.addLayer(layerGroup2);
+
+     
+     
+
+
+
+
+
+
+
+
+
+
+    
+
+
+
+
+
+  
+
+
+
+
+
+
+
+   
+
+
+
+
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% endblock %}

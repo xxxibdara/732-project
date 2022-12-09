@@ -1,0 +1,46 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <div style="text-align: center;">
+
+
+<div style="position:absolute; top:60px; left:10px; width:500px; height:550px;">
+    <h3>Rating Count</h3>
+    <canvas id="myChart"></canvas>
+
+
+
+</div>
+<script>
+    const ctx = document.getElementById('myChart');
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ["l","j","o"
+                // {% for item in labels %}
+                //        "{{ item }}",
+                // {% endfor %}
+            ],
+            datasets: [{
+                label: '# of Businesses',
+                data: ["4","5","9"
+                    // {% for item in values %}
+                    // "{{ item }}",
+                    // {% endfor %}
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+    </div>
+{% endblock %}

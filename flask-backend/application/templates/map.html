@@ -1,0 +1,142 @@
+{% extends 'layout.html' %}
+{% block content %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
+     integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI=" crossorigin="" />
+<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
+     integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM=" crossorigin=""></script>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.4.1/MarkerCluster.css" />
+<link rel="stylesheet"
+     href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.0/MarkerCluster.Default.min.css" />
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.4.1/leaflet.markercluster.js"></script>
+
+<style>
+     #bmap {
+          height: 400px
+     }
+</style>
+
+<h3 style="text-align: center">Map</h3>
+
+
+
+
+
+<div class="dropdown" method='GET' style="padding-left: 80px">
+     <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown"
+          aria-expanded="false">
+          Apply stars' filter
+     </button>
+     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+          <li><a class="dropdown-item" href="{{ url_for('star_map',  s=1)}}">1</a></li>
+          <li><a class="dropdown-item" href="{{ url_for('star_map',  s=2)}}">2 </a></li>
+          <li><a class="dropdown-item" href="{{ url_for('star_map',  s=3)}}">3</a></li>
+          <li><a class="dropdown-item" href="{{ url_for('star_map',  s=4)}}">4</a></li>
+          <li><a class="dropdown-item" href="{{ url_for('star_map',  s=5)}}">5</a></li>
+     </ul>
+</div>
+
+
+<div style="padding-bottom: 50px">
+
+</div>
+
+
+
+
+
+<div id="bmap"></div>
+
+<script>
+     //make map and tiles
+
+     const bmap = L.map('bmap').setView([53.55, -113.49], 12);
+     const attribution = '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>';
+     const tileUrl = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
+     const tile = L.tileLayer(tileUrl, { attribution });
+     tile.addTo(bmap);
+
+
+     const jsonfile = JSON.parse({{ data| tojson}});
+     const markers = L.markerClusterGroup();
+
+
+
+
+     var color_by_category = {
+          "Restaurants": "darkblue", "Food": "cadetblue", "Nightlife": "black",
+          "Shopping": "darkpurple", "Beauty & Spas": "pink", "Local Services": "darktblue",
+          "Fashion": "darkpurple", "Active Life": "darkred",
+          "Automotive": "orange", "Health & Medical": "darkgreen", "Others": "gray"
+     };
+
+     var customize_icon = {
+          "Restaurants": "coffee", "Food": "glass", "Nightlife": "bookmark",
+          "Shopping": "star", "Beauty & Spas": "star", "Local Services": "flag",
+          "Fashion": "star", "Active Life": "bookmark",
+          "Automotive": "car", "Health & Medical": "flag", "Others": "tags"
+     };
+
+
+     //"Name: " + jsonfile[i]['name'] +"</br>" + " Stars: " +  jsonfile[i]['stars'] +  " Review count: " + jsonfile[i]['review_count'];
+
+     for (i = 0; i < jsonfile.length; i++) {
+          var c = jsonfile[i]["category"]
+          var content = "Name: " + jsonfile[i]['name'] + "</br>" + " Stars: " + jsonfile[i]['stars'] + "</br>" + " Review count: " + jsonfile[i]['review_count'];
+          var by_category = L.AwesomeMarkers.icon({ icon: customize_icon[c], prefix: 'fa', markerColor: color_by_category[c] });
+          marker = L.marker([jsonfile[i]['latitude'], jsonfile[i]['longitude']], { icon: by_category }).bindPopup(content);
+          marker.on('mouseover', function (e) {
+               this.openPopup();
+          });
+          marker.on('mouseout', function (e) {
+               this.closePopup();
+          });
+          markers.addLayer(marker);
+     }
+
+     bmap.addLayer(markers);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+
+
+
+
+
+
+
+{% endblock %}
