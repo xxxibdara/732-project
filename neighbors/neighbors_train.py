@@ -41,9 +41,10 @@ def main(inputs, duration, model_file):
     print('Pandas DataFrame: \n', pandasDF)
 
     x = pandasDF[['id','name', 'latitude', 'longitude', 'i']]
-    train, test = train_test_split(x, test_size=.25, random_state=0) #25% is the test data
+    train, test = train_test_split(x, test_size=.75, random_state=0) #25% is the test data
 
-    train_data = train.values[:, 2:4]
+    train_data = x.values[:, 2:4] #use the whole data ‘x' to find each point’s neighbors
+
     test_data = test.values[:, 2:4]
     print('Train data looks like: \n', train_data)
     
@@ -54,31 +55,29 @@ def main(inputs, duration, model_file):
 
     #find the neighbors with 500 meters
     distances, indices = clt.radius_neighbors(train_data, duration, return_distance=True)
-    train['distances'] = distances.tolist()
-    train['indices'] = indices.tolist()
+    x['distances'] = distances.tolist()
+    x['indices'] = indices.tolist()
 
     #test contains 7 column: id, name, longitude, latitude, distances, indices, row number  
-    
+
     #filter out the points that it is the test data itself and some unrealiable 
     results = []
-    
-    for name, la1, lo1, i, dis, indices in train.values[:, 1:7]:
+    for id1, name1, la1, lo1, i, dis, indices in x.values:
         #points and dis are Numpy arrays
-        indices = np.array(indices).tolist()
-        dis = np.array(dis).tolist()
-        for ic in indices:
-            idx = indices.index(ic) 
-            if idx >= 0:
-                indices.pop(idx)
-                dis.pop(idx)
+        indices = indices.tolist()
+        dis = dis.tolist()
+        
+        idx = indices.index(i) 
+        if idx >= 0:
+            indices.pop(idx)
+            dis.pop(idx)
 
-            zipped = zip(indices, distances)
-            for p, d in zipped:
-                p = int(p)
+        for p, d in zip(indices, dis):
+            p = int(p)
+            id2, name2, la2, lo2 = x.loc[p].values[0:4]
+            results.append((id1, name1, la1, lo1, id2, name2, la2, lo2, d))
 
-                id, name2, la2, lo2 = x.loc[p].values[0:4]
-                results.append((name, la1, lo1, id, name2, la2, lo2, d))
-    results = pd.DataFrame(results, columns=['STORE','LATITUDE', 'LONGITUDE', 'NEIGHBOR ID', 'NEIGHBOR STORE', 'NEIGHBOR LATITUDE', 'NEIGHBOR LONGITUDE', 'DISTANCE'])
+    results = pd.DataFrame(results, columns=['STORE ID', 'STORE','LATITUDE', 'LONGITUDE', 'NEIGHBOR ID', 'NEIGHBOR STORE', 'NEIGHBOR LATITUDE', 'NEIGHBOR LONGITUDE', 'DISTANCE'])
     results = results.drop_duplicates(['NEIGHBOR LATITUDE'])
     #I want to know which store has the most neighbors
     results['COUNTS'] = results.groupby('STORE')['NEIGHBOR STORE'].transform(len)
@@ -107,6 +106,4 @@ if __name__ == "__main__":
     duration = sys.argv[2]
     model = sys.argv[3]
     main(input, duration, model)
-
-
 
