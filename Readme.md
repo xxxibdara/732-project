@@ -1,4 +1,4 @@
-# Yelp Business Analysis and Visualization Website
+# Yelp Business Analysis and Location Recommendation
 
 Preview Link: https://cmpt732-demo.azurewebsites.net/
 
