@@ -45,7 +45,7 @@ const HolderWrapper = styled("div")(() => ({
 }));
 
 const NLP= () => {
-  const {positiveData, setPositiveData, negativeData, setNegativeData, getPositiveData, getNegativeData} = useWordCloudData();
+  const {getPositiveData, getNegativeData} = useWordCloudData();
 
   const [goodWordCloud, setGoodWordCloud] = useState(null);
   const [badWordCloud, setBadWordCloud] = useState(null);
@@ -90,15 +90,13 @@ const NLP= () => {
       }
 
       if (positiveLog) {
-        setPositiveData(processData(positiveLog));
-        setGoodWordCloud(SimpleWordCloud(positiveData));
+        setGoodWordCloud(SimpleWordCloud(processData(positiveLog)));
       } else {
         setGoodWordCloud(null);
       }
 
       if (negativeLog) {
-        setNegativeData(processData(negativeLog));
-        setBadWordCloud(SimpleWordCloud(negativeData));
+        setBadWordCloud(SimpleWordCloud(processData(negativeLog)));
       } else {
         setBadWordCloud(null);
       }

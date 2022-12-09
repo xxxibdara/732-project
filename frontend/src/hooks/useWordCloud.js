@@ -3,9 +3,6 @@ import axios from "../util/axios";
 
 export default function useWordCloudData() {
   // Create a custom React Hook
-  const [positiveData, setPositiveData] = useState({});
-  const [negativeData, setNegativeData] = useState({});
-
   const getPositiveData = async (id) => {
     const response = await axios.get(`/wordCloudPositive/${id}`);
     return response.data[0];
@@ -17,11 +14,7 @@ export default function useWordCloudData() {
   };
 
   return {
-    positiveData,
-    setPositiveData,
     getPositiveData,
     getNegativeData,
-    negativeData,
-    setNegativeData
   };
 }
