@@ -1,5 +1,4 @@
 import pandas as pd
-import numpy as np
 import sys
 from math import *
 from pyspark.sql import SparkSession, types, functions
@@ -85,8 +84,8 @@ def main(inputs, duration, model_file):
 
     neighbors = results.merge(store_info_pd, left_on='NEIGHBOR ID', right_on='id', how='inner')
     compression_opts = dict(method='zip',
-                        archive_name='out.csv')  
-    neighbors.to_csv('out.zip', index=False,
+                        archive_name='output.csv')  
+    neighbors.to_csv('output.zip', index=False,
           compression=compression_opts)
     
 
