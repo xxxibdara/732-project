@@ -1,7 +1,4 @@
-# Run the location recommender part 
-## Introduction
-How to run this program to get the input data of website
-
+# Generate data for location recommender part 
 ## Command line for train
 ![train-command](https://github.com/ziyaocui/732-project/blob/d6fb29feeaba3ca2a277e087f20dfe881425a650/neighbors/img-folder/train-command.png)
 - spark-submit neighbors_train.py train-data 500 test-model
@@ -18,7 +15,7 @@ How to run this program to get the input data of website
 - This file contains the corresponding neighbors' distances and indices of each location
 - 500: could be changed based on what users want
 
-## Run wordcount.ipynb
+# Generate data for word cloud in NLP part
 - Input file for wordcount.ipynb is "input file for wordcount.zip"
 - It will produce a file called: out_negative.csv or out_positive.csv
 - The file contains word count for each single business that has 1 review star or 5, each row represents one business
