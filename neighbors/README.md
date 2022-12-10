@@ -3,7 +3,7 @@ How to run this program to get the input data of website
 
 ## Command line for train
 
-![train-command](https://github.com/ziyaocui/732-project/edit/main/neighbors/train-command.png)
+![train-command](https://github.com/ziyaocui/732-project/edit/main/neighbors/img-folder/train-command.png)
 
 - spark-submit neighbors_train.py train-data 500 test-model
 - It will produce a output.zip file, a test-data.csv file and a test-model
