@@ -4,7 +4,7 @@
 - spark-submit neighbors_train.py train-data 500 test-model
 - It will produce a output.zip file, a test-data.csv file and a test-model
 - 500: the range that our users could change
-- output.zip: Contains our input data
+- output.zip: Contains our input data for the web
 - test-data.csv: our test data
 - test-model: is used for run our neighboes_test.py
 
