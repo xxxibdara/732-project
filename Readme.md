@@ -1,6 +1,6 @@
 # Yelp Business Analysis and Location Recommendation
 
-Preview Link(Deployed URL): https://cmpt732-demo.azurewebsites.net/
+Preview Link(Deployed URL): https://cmpt-demo-web.azurewebsites.net
 
 Demo Video: https://www.youtube.com/watch?v=j9IToR9_agg
 
