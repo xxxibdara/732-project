@@ -10,7 +10,7 @@ Demo Video: https://www.youtube.com/watch?v=j9IToR9_agg
   - [Introduction](#introduction)
   - [Run the application locally](#run-the-application-locally)
   - [Repo Structure](#repo-structure)
-  - [Tech stack](#tech-stack)
+  - [Tech Stack](#tech-stack)
 
 
 ## Introduction
